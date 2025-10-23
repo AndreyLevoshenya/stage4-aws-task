@@ -1,0 +1,8 @@
+/localstack
+/localstack-data
+/.idea
+*/.terraform
+commands
+.terraform.*
+*.tfstate
+*.tfstate.*

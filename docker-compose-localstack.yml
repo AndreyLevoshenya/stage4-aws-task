@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  localstack:
+    image: localstack/localstack:stable
+    container_name: localstack
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      - SERVICES=iam,ec2,s3,dynamodb,lambda
+      - PERSISTENCE=true
+      - DEBUG=1
+      - LAMBDA_EXECUTOR=docker
+    volumes:
+      - localstack_data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  localstack_data:
