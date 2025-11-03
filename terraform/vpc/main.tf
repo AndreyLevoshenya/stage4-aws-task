@@ -37,7 +37,7 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-resource "aws_route_table" "public-rt" {
+resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.this.id
 
   route {
@@ -50,10 +50,10 @@ resource "aws_route_table" "public-rt" {
   }
 }
 
-resource "aws_route_table_association" "public-subnet-assoc" {
+resource "aws_route_table_association" "public_subnet_assoc" {
   count = length(var.public_subnet_cidrs)
   subnet_id = aws_subnet.public_subnets[count.index].id
-  route_table_id = aws_route_table.public-rt.id
+  route_table_id = aws_route_table.public_rt.id
 }
 
 resource "aws_eip" "nat_eip" {
@@ -77,7 +77,7 @@ resource "aws_nat_gateway" "nat" {
   depends_on = [aws_internet_gateway.igw]
 }
 
-resource "aws_route_table" "private-rt" {
+resource "aws_route_table" "private_rt" {
   count = length(var.private_subnet_cidrs)
   vpc_id = aws_vpc.this.id
 
@@ -91,11 +91,8 @@ resource "aws_route_table" "private-rt" {
   }
 }
 
-resource "aws_route_table_association" "private-subnet-assoc" {
+resource "aws_route_table_association" "private_subnet_assoc" {
   count = length(var.private_subnet_cidrs)
   subnet_id = aws_subnet.private_subnets[count.index].id
-  route_table_id = aws_route_table.private-rt[count.index].id
+  route_table_id = aws_route_table.private_rt[count.index].id
 }
-
-
-

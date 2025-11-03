@@ -13,3 +13,15 @@ module "iam" {
 module "s3" {
   source = "./s3"
 }
+
+module "ec2" {
+  source = "./ec2"
+  vpc_id = module.vpc.vpc.id
+  public_subnets = module.vpc.vpc_public_subnets
+  key_name = "ec2_key" # should create key in aws account for ssh access
+  iam_ec2_role = module.iam.s3_full_access_role
+
+  instance_type = "t3.micro"
+  ami_name_filter = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  admin_ip = "127.0.0.1/32"
+}
