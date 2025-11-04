@@ -8,7 +8,7 @@ services:
       - "4566:4566"
       - "4510-4559:4510-4559"
     environment:
-      - SERVICES=iam,ec2,s3,dynamodb,lambda
+      - SERVICES=iam,ec2,s3,dynamodb,lambda,rds
       - PERSISTENCE=true
       - DEBUG=1
       - LAMBDA_EXECUTOR=docker
