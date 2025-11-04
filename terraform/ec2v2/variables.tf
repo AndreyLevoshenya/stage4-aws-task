@@ -30,7 +30,3 @@ variable "ami_name_filter" {
   type = list(string)
   default = ["amzn2-ami-hvm-*-x86_64-gp2"]
 }
-
-variable "iam_ec2_role" {
-  description = "Role to add to EC2 instance"
-}

@@ -7,9 +7,9 @@ resource "aws_vpc" "this" {
 }
 
 resource "aws_subnet" "public_subnets" {
-  vpc_id = aws_vpc.this.id
+  vpc_id            = aws_vpc.this.id
   count = length(var.public_subnet_cidrs)
-  cidr_block = var.public_subnet_cidrs[count.index]
+  cidr_block        = var.public_subnet_cidrs[count.index]
   availability_zone = var.azs[count.index]
 
 
@@ -19,9 +19,9 @@ resource "aws_subnet" "public_subnets" {
 }
 
 resource "aws_subnet" "private_subnets" {
-  vpc_id = aws_vpc.this.id
+  vpc_id            = aws_vpc.this.id
   count = length(var.private_subnet_cidrs)
-  cidr_block = var.private_subnet_cidrs[count.index]
+  cidr_block        = var.private_subnet_cidrs[count.index]
   availability_zone = var.azs[count.index]
 
   tags = {
@@ -52,7 +52,7 @@ resource "aws_route_table" "public_rt" {
 
 resource "aws_route_table_association" "public_subnet_assoc" {
   count = length(var.public_subnet_cidrs)
-  subnet_id = aws_subnet.public_subnets[count.index].id
+  subnet_id      = aws_subnet.public_subnets[count.index].id
   route_table_id = aws_route_table.public_rt.id
 }
 
@@ -68,7 +68,7 @@ resource "aws_eip" "nat_eip" {
 resource "aws_nat_gateway" "nat" {
   count = length(var.public_subnet_cidrs)
   allocation_id = aws_eip.nat_eip[count.index].id
-  subnet_id = aws_subnet.public_subnets[count.index].id
+  subnet_id     = aws_subnet.public_subnets[count.index].id
 
   tags = {
     Name = "${local.project_name}-NAT-${local.az_letters[count.index]}"
@@ -82,7 +82,7 @@ resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.this.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat[count.index].id
   }
 
@@ -93,6 +93,6 @@ resource "aws_route_table" "private_rt" {
 
 resource "aws_route_table_association" "private_subnet_assoc" {
   count = length(var.private_subnet_cidrs)
-  subnet_id = aws_subnet.private_subnets[count.index].id
+  subnet_id      = aws_subnet.private_subnets[count.index].id
   route_table_id = aws_route_table.private_rt[count.index].id
 }

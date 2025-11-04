@@ -1,14 +1,14 @@
 # policies
 
 resource "aws_iam_policy" "full_access_policy_ec2" {
-  name = "FullAccessPolicyEC2"
+  name        = "FullAccessPolicyEC2"
   description = "Allows full access to all EC2 resources"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Effect = "Allow"
-        Action = "ec2:*"
+        Effect   = "Allow"
+        Action   = "ec2:*"
         Resource = "*"
       }
     ]
@@ -16,14 +16,14 @@ resource "aws_iam_policy" "full_access_policy_ec2" {
 }
 
 resource "aws_iam_policy" "full_access_policy_s3" {
-  name = "FullAccessPolicyS3"
+  name        = "FullAccessPolicyS3"
   description = "Allows full access to all S3 buckets"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Effect = "Allow"
-        Action = "s3:*"
+        Effect   = "Allow"
+        Action   = "s3:*"
         Resource = "*"
       }
     ]
@@ -31,7 +31,7 @@ resource "aws_iam_policy" "full_access_policy_s3" {
 }
 
 resource "aws_iam_policy" "read_access_policy_s3" {
-  name = "ReadAccessPolicyS3"
+  name        = "ReadAccessPolicyS3"
   description = "Allows read-only access (GET and LIST) to all S3 buckets"
   policy = jsonencode({
     Version = "2012-10-17"
