@@ -6,3 +6,4 @@ commands
 .terraform.*
 *.tfstate
 *.tfstate.*
+.env
