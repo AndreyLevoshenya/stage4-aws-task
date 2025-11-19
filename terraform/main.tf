@@ -6,13 +6,9 @@ module "vpc" {
   azs                  = var.azs
 }
 
-module "iam" {
-  source = "./iam"
-}
-
-module "s3" {
-  source = "./s3"
-}
+# module "iam" {
+#   source = "./iam"
+# }
 
 # module "ec2" {
 #   depends_on = [module.vpc, module.iam]
@@ -27,23 +23,38 @@ module "s3" {
 #   admin_ip      = "127.0.0.1/32"
 # }
 
-module "bastion" {
-  depends_on = [module.vpc]
-  source         = "./ec2v2"
-  vpc_id         = module.vpc.vpc.id
-  public_subnets = module.vpc.vpc_public_subnets
-  key_name = "ec2_key" # should create key in aws account for ssh access
+# module "bastion" {
+#   depends_on = [module.vpc]
+#   source         = "./ec2v2"
+#   vpc_id         = module.vpc.vpc.id
+#   public_subnets = module.vpc.vpc_public_subnets
+#   key_name = "ec2_key" # should create key in aws account for ssh access
+#
+#   instance_type = "t3.micro"
+#   ami_name_filter = ["amzn2-ami-hvm-*-x86_64-gp2"]
+#   admin_ip      = "127.0.0.1/32"
+# }
 
-  instance_type = "t3.micro"
-  ami_name_filter = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  admin_ip      = "127.0.0.1/32"
+# module "rds" {
+#   depends_on = [module.vpc, module.bastion]
+#   source          = "./rds"
+#   vpc_id          = module.vpc.vpc.id
+#   private_subnets = module.vpc.vpc_private_subnets
+#   db_password     = "password"
+#   bastion_sg_id   = module.bastion.bastion_sg.id
+# }
+
+module "s3" {
+  source = "./s3"
 }
 
-module "rds" {
-  depends_on = [module.vpc, module.bastion]
-  source          = "./rds"
-  vpc_id          = module.vpc.vpc.id
-  private_subnets = module.vpc.vpc_private_subnets
-  db_password     = "password"
-  bastion_sg_id   = module.bastion.bastion_sg.id
+module "dynamodb" { # create Fleet table
+  source = "./dynamodb"
+}
+
+module "lambda" {
+  depends_on = [module.s3, module.dynamodb]
+  source = "./lambda"
+  bucket_name = module.s3.bucket_name
+  dynamodb_table = module.dynamodb.fleet_table
 }
